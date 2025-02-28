@@ -1,5 +1,6 @@
 #include "stack.hpp"
 #include <algorithm>
+#include <cmath>
 #include <iostream>
 using namespace std;
 
@@ -66,6 +67,66 @@ void infixToPostfixConversion(Stack<char> *opStack, Stack<char> *postStack,
     postStack->push(opStack->pop());
   }
 }
+
+int evaluatePostfix(string postfix) {
+  Stack<int> stack;
+  for (char ch : postfix) {
+    if (isdigit(ch)) {
+      stack.push(ch - '0');
+    } else {
+      int operand2 = stack.pop();
+      int operand1 = stack.pop();
+      switch (ch) {
+      case '+':
+        stack.push(operand1 + operand2);
+        break;
+      case '-':
+        stack.push(operand1 - operand2);
+        break;
+      case '*':
+        stack.push(operand1 * operand2);
+        break;
+      case '/':
+        stack.push(operand1 / operand2);
+        break;
+      case '$':
+        stack.push(pow(operand1, operand2));
+        break;
+      }
+    }
+  }
+  return stack.pop();
+}
+int evaluatePrefix(string prefix) {
+  Stack<int> stack;
+  reverse(prefix.begin(), prefix.end());
+  for (char ch : prefix) {
+    if (isdigit(ch)) {
+      stack.push(ch - '0');
+    } else {
+      int operand1 = stack.pop();
+      int operand2 = stack.pop();
+      switch (ch) {
+      case '+':
+        stack.push(operand1 + operand2);
+        break;
+      case '-':
+        stack.push(operand1 - operand2);
+        break;
+      case '*':
+        stack.push(operand1 * operand2);
+        break;
+      case '/':
+        stack.push(operand1 / operand2);
+        break;
+      case '$':
+        stack.push(pow(operand1, operand2));
+        break;
+      }
+    }
+  }
+  return stack.pop();
+}
 int main() {
   int choice;
   Stack<char> *opStack = new Stack<char>();
@@ -106,6 +167,19 @@ int main() {
     while (!postStack->isEmpty()) {
       cout << (postStack->pop()) << " ";
     }
+    break;
+  case 3:
+    cout << "Enter your postfix expression: " << endl;
+    cin >> infix;
+    cout << "Result: " << evaluatePostfix(infix) << endl;
+    break;
+  case 4:
+    cout << "Enter your prefix expression: " << endl;
+    cin >> infix;
+    cout << "Result: " << evaluatePrefix(infix) << endl;
+    break;
+  default:
+    cout << "Invalid Choice" << endl;
     break;
   }
 }
